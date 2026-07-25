@@ -759,6 +759,11 @@ html, body {
         border-radius: 100px; background: var(--coral); color: white; font-size: 10.5px; font-weight: 700;
         display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif;
       }
+      .phx-hamburger { display: none; }
+      @media (max-width: 880px) {
+        .phx-nav { display: none; }
+        .phx-hamburger { display: inline-flex; }
+      }
       /* Полностью скрываем и бургер, и само мобильное выпадающее меню */
 .phx-hamburger, 
 .phx-mobile-menu { 
