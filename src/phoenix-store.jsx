@@ -795,7 +795,7 @@ html, body {
     height: 34px; 
     flex-shrink: 0 !important; /* Кнопки больше никогда не сожмутся и не съедут */
   }
-  .phx-owner-btn { display: none; }
+  .phx-owner-btn { display: block; }
 }
 
 
