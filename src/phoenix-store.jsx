@@ -628,6 +628,18 @@ function GlobalStyles() {
     <style>{`
       @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
+      /* Блокируем горизонтальную прокрутку для всего сайта */
+html, body {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* На всякий случай запереть и главный контейнер сайта, если он есть */
+#root, .app, main {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
       .phx-root, .phx-root * { box-sizing: border-box; }
       .phx-root {
         --coral: #FF6B4A;
@@ -671,7 +683,7 @@ function GlobalStyles() {
       .phx-root button { font-family: inherit; cursor: pointer; }
       .phx-root input, .phx-root textarea, .phx-root select { font-family: inherit; }
       .phx-root ul { margin: 0; padding: 0; list-style: none; }
-      .phx-root img { max-width: 100%; display: block; }
+      .phx-root img { max-width: 100%; height: auto; display: block; }
       .phx-root :focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; border-radius: 4px; }
 
       .phx-eyebrow {
@@ -690,6 +702,7 @@ function GlobalStyles() {
       .phx-container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
       .phx-section { padding: 72px 0; }
       @media (max-width: 720px) { .phx-section { padding: 48px 0; } .phx-container { padding: 0 18px; } }
+      @media (max-width: 480px) { .phx-container { padding: 0 16px; } }
 
       /* ---------- buttons ---------- */
       .phx-btn {
@@ -715,7 +728,7 @@ function GlobalStyles() {
       .phx-btn-block { width: 100%; }
       .phx-icon-btn {
         display: inline-flex; align-items: center; justify-content: center;
-        width: 42px; height: 42px; border-radius: 50%; border: none;
+        width: 42px; height: 42px; border-radius: 50%; border: none; flex-shrink: 0;
         background: transparent; color: var(--ink); position: relative;
         transition: background 0.18s ease;
       }
@@ -751,14 +764,40 @@ function GlobalStyles() {
         .phx-nav { display: none; }
         .phx-hamburger { display: inline-flex; }
       }
-      .phx-mobile-menu {
-        position: fixed; inset: 78px 0 0 0; background: var(--cream); z-index: 70;
-        padding: 20px; overflow-y: auto; animation: phxSlideDown 0.22s ease;
-      }
-      .phx-mobile-menu a, .phx-mobile-menu button.phx-mobile-link {
-        display: block; width: 100%; text-align: left; background: none; border: none;
-        font-family: 'Fraunces', serif; font-size: 28px; padding: 16px 4px; border-bottom: 1px solid var(--line); color: var(--ink);
-      }
+      /* Полностью скрываем и бургер, и само мобильное выпадающее меню */
+.phx-hamburger, 
+.phx-mobile-menu { 
+  display: none !important; 
+}
+
+@media (max-width: 480px) {
+  .phx-header-inner { 
+    height: 62px; 
+    gap: 12px; /* Даем нормальный базовый отступ логотипу от иноку */
+  }
+  .phx-logo { gap: 0; }
+  .phx-logo svg { width: 26px; height: 26px; }
+  .phx-logo-word, .phx-logo-tag { display: none; }
+  
+  
+  /* Возвращаем кнопкам их родной порядок (row) и запрещаем сжиматься */
+  .phx-header-actions { 
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px; 
+
+    margin-right: 16px !important; 
+  }
+  
+  .phx-icon-btn { 
+    width: 34px; 
+    height: 34px; 
+    flex-shrink: 0 !important; /* Кнопки больше никогда не сожмутся и не съедут */
+  }
+  .phx-owner-btn { display: none; }
+}
+
 
       /* ---------- locale / currency switcher ---------- */
       .phx-locale-switch { display: flex; align-items: center; gap: 8px; }
@@ -796,6 +835,13 @@ function GlobalStyles() {
       .phx-dropdown-item:hover { background: var(--mist); }
       .phx-dropdown-item.active { background: var(--teal-tint); color: var(--teal-deep); }
       .phx-dropdown-item.active svg { color: var(--coral); }
+      @media (max-width: 480px) {
+        .phx-locale-switch { gap: 4px; }
+        .phx-locale-button { height: 30px; padding: 0 8px; gap: 4px; font-size: 11px; }
+        .phx-locale-button .phx-locale-icon { width: 11px; height: 11px; }
+        .phx-locale-chevron { display: none; }
+        .phx-dropdown-menu { min-width: 96px; }
+      }
       @keyframes phxDropIn {
         from { opacity: 0; transform: translateX(-50%) translateY(-6px) scale(0.96); }
         to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
@@ -809,10 +855,14 @@ function GlobalStyles() {
       }
       .phx-search-box { width: 100%; max-width: 620px; background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 8px; animation: phxPopIn 0.22s ease; }
       .phx-search-box input {
-        width: 100%; border: none; outline: none; font-size: 20px; padding: 16px 18px;
+        width: 100%; min-width: 0; border: none; outline: none; font-size: 20px; padding: 16px 18px;
         font-family: 'Fraunces', serif; background: transparent;
       }
       .phx-search-row { display: flex; align-items: center; gap: 10px; }
+      @media (max-width: 480px) {
+        .phx-search-overlay { padding: 70px 14px; }
+        .phx-search-box input { font-size: 16px; padding: 14px 8px; }
+      }
 
       /* ---------- hero ---------- */
       .phx-hero { padding: 56px 0 24px; overflow: hidden; }
@@ -985,11 +1035,19 @@ function GlobalStyles() {
       .phx-product-info h1 { font-size: clamp(28px, 3.6vw, 40px); margin-bottom: 14px; }
       .phx-product-info .phx-price { font-size: 26px; color: var(--coral-dark); display: block; margin-bottom: 22px; }
       .phx-product-info .desc { font-size: 15.5px; line-height: 1.7; margin-bottom: 28px; }
-      .phx-qty-row { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
-      .phx-stepper { display: flex; align-items: center; border: 1.5px solid var(--line); border-radius: 100px; overflow: hidden; }
-      .phx-stepper button { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: white; border: none; color: var(--ink); }
+      .phx-qty-row { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; flex-wrap: wrap; }
+      @media (max-width: 480px) {
+        .phx-qty-row { flex-direction: column; align-items: stretch; gap: 12px; }
+        .phx-qty-row .phx-btn { width: 100%; }
+      }
+      .phx-stepper { display: flex; align-items: center; border: 1.5px solid var(--line); border-radius: 100px; overflow: hidden; flex-shrink: 0; }
+      .phx-stepper button { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: white; border: none; color: var(--ink); flex-shrink: 0; }
       .phx-stepper button:hover { background: var(--mist); }
       .phx-stepper span { width: 34px; text-align: center; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+      @media (max-width: 480px) {
+        .phx-stepper button { width: 32px; height: 32px; }
+        .phx-stepper span { width: 26px; }
+      }
       .phx-related { margin-top: 8px; }
       .phx-related h3 { font-size: 20px; margin-bottom: 18px; }
 
@@ -998,10 +1056,16 @@ function GlobalStyles() {
       @media (max-width: 860px) { .phx-cart-layout { grid-template-columns: 1fr; } }
       .phx-cart-row { display: grid; grid-template-columns: 84px 1fr auto; gap: 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
       .phx-cart-row img { width: 84px; height: 84px; object-fit: cover; border-radius: 12px; }
+      .phx-cart-row-info { min-width: 0; }
       .phx-cart-row h4 { font-size: 15.5px; margin-bottom: 4px; }
       .phx-cart-row .cat { font-size: 12px; color: var(--ink-soft); margin-bottom: 8px; }
-      .phx-cart-row-actions { display: flex; align-items: center; gap: 16px; }
+      .phx-cart-row-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; row-gap: 8px; }
       .phx-cart-row .line-total { font-family: 'Space Grotesk', sans-serif; font-weight: 700; min-width: 62px; text-align: right; }
+      @media (max-width: 480px) {
+        .phx-cart-row { grid-template-columns: 64px 1fr auto; gap: 10px; }
+        .phx-cart-row img { width: 64px; height: 64px; }
+        .phx-cart-row .line-total { min-width: 0; font-size: 13.5px; }
+      }
       .phx-summary-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; background: white; position: sticky; top: 100px; }
       .phx-summary-row { display: flex; justify-content: space-between; font-size: 14.5px; margin-bottom: 12px; color: var(--ink-soft); }
       .phx-summary-row.total { color: var(--ink); font-weight: 700; font-size: 17px; padding-top: 14px; margin-top: 4px; border-top: 1px solid var(--line); }
@@ -1012,7 +1076,7 @@ function GlobalStyles() {
       .phx-field label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 7px; color: var(--ink); }
       .phx-field .hint { font-size: 12px; color: var(--ink-soft); font-weight: 400; margin-left: 6px; }
       .phx-input, .phx-textarea, .phx-select {
-        width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px;
+        width: 100%; min-width: 0; border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px;
         font-size: 14.5px; background: white; color: var(--ink); transition: border-color 0.15s ease;
       }
       .phx-input:focus, .phx-textarea:focus, .phx-select:focus { border-color: var(--coral); outline: none; }
@@ -1031,7 +1095,13 @@ function GlobalStyles() {
       .phx-drawer-foot { padding: 20px 22px 26px; border-top: 1px solid var(--line); background: white; }
       .phx-drawer-row { display: grid; grid-template-columns: 60px 1fr auto; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
       .phx-drawer-row img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
-      .phx-drawer-row h5 { font-size: 14px; margin-bottom: 4px; }
+      .phx-drawer-row-info { min-width: 0; }
+      .phx-drawer-row h5 { font-size: 14px; margin-bottom: 4px; overflow-wrap: anywhere; }
+      @media (max-width: 480px) {
+        .phx-drawer-row { grid-template-columns: 50px 1fr auto; gap: 8px; }
+        .phx-drawer-row img { width: 50px; height: 50px; }
+        .phx-drawer-body, .phx-drawer-head, .phx-drawer-foot { padding-left: 16px; padding-right: 16px; }
+      }
 
       /* ---------- toast ---------- */
       .phx-toast-wrap { position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%); z-index: 120; }
@@ -1418,7 +1488,7 @@ function Header({ page, cartCount, isAdmin, onNavigate, onOpenCart, onOpenSearch
             <ShoppingBag size={19} />
             {cartCount > 0 && <span className="phx-cart-badge">{cartCount}</span>}
           </button>
-          <button className="phx-icon-btn" aria-label={t("header.ownerAria")} onClick={() => go(isAdmin ? "admin-dashboard" : "admin-login")}>
+          <button className="phx-icon-btn phx-owner-btn" aria-label={t("header.ownerAria")} onClick={() => go(isAdmin ? "admin-dashboard" : "admin-login")}>
             <Lock size={18} />
           </button>
           <button className="phx-icon-btn phx-hamburger" aria-label={t("header.menuAria")} onClick={() => setMenuOpen((v) => !v)}>
@@ -1484,7 +1554,7 @@ function CartDrawer({ items, subtotal, onClose, onUpdateQty, onRemove, onNavigat
             items.map(({ product, qty }) => (
               <div className="phx-drawer-row" key={product.id}>
                 <img src={product.image} alt={L(product.name, lang)} />
-                <div>
+                <div className="phx-drawer-row-info">
                   <h5>{L(product.name, lang)}</h5>
                   <div className="phx-stepper" style={{ display: "inline-flex" }}>
                     <button onClick={() => onUpdateQty(product.id, qty - 1)} aria-label={t("common.decrease")}><Minus size={13} /></button>
@@ -1850,7 +1920,7 @@ function CartPage({ items, subtotal, onNavigate, onUpdateQty, onRemove }) {
             return (
               <div className="phx-cart-row" key={product.id}>
                 <img src={product.image} alt={L(product.name, lang)} />
-                <div>
+                <div className="phx-cart-row-info">
                   <h4>{L(product.name, lang)}</h4>
                   <div className="cat">{t(`category.${product.category}`)}</div>
                   <div className="phx-cart-row-actions">
@@ -1984,7 +2054,7 @@ function CheckoutPage({ items, subtotal, coupons, onNavigate, onPlaceOrder }) {
             </div>
             <div className="phx-field">
               <label>{t("checkout.phone")}</label>
-              <input className={`phx-input ${errors.phone ? "has-error" : ""}`} value={form.phone} onChange={setField("phone")} placeholder="+996 700 000 000" />
+              <input className={`phx-input ${errors.phone ? "has-error" : ""}`} value={form.phone} onChange={setField("phone")} placeholder="+996 778 156 377" />
               {errors.phone && <div className="phx-field-error">{errors.phone}</div>}
             </div>
           </div>
@@ -2090,8 +2160,8 @@ function AboutPage({ onNavigate }) {
           <div>
             <span className="phx-eyebrow">{t("about.getInTouch")}</span>
             <h2 style={{ margin: "10px 0 24px" }}>{t("about.loveToHear")}</h2>
-            <div className="phx-contact-info-item"><span className="ic"><Mail size={18} /></span><div><h4>{t("about.emailLabel")}</h4><p>hello@phoenixstyle.example</p></div></div>
-            <div className="phx-contact-info-item"><span className="ic"><Phone size={18} /></span><div><h4>{t("about.phoneLabel")}</h4><p>+996 700 000 000</p></div></div>
+            <div className="phx-contact-info-item"><span className="ic"><Mail size={18} /></span><div><h4>{t("about.emailLabel")}</h4><p>kanatormonov2003@gmail.com</p></div></div>
+            <div className="phx-contact-info-item"><span className="ic"><Phone size={18} /></span><div><h4>{t("about.phoneLabel")}</h4><p>+996 778 156 377</p></div></div>
             <div className="phx-contact-info-item"><span className="ic"><MapPin size={18} /></span><div><h4>{t("about.showroomLabel")}</h4><p>{t("about.showroomValue")}</p></div></div>
             <div className="phx-contact-info-item"><span className="ic"><Clock size={18} /></span><div><h4>{t("about.hoursLabel")}</h4><p>{t("about.hoursValue")}</p></div></div>
           </div>
@@ -2999,7 +3069,7 @@ function Footer({ onNavigate }) {
             <ul>
               <li>{t("footer.locationValue")}</li>
               <li>{t("footer.hours")}</li>
-              <li>hello@phoenixstyle.example</li>
+              <li>kanatormonov2003@gmail.com</li>
             </ul>
           </div>
         </div>
