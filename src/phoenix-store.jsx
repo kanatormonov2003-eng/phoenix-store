@@ -759,7 +759,7 @@ html, body {
         border-radius: 100px; background: var(--coral); color: white; font-size: 10.5px; font-weight: 700;
         display: flex; align-items: center; justify-content: center; font-family: 'Space Grotesk', sans-serif;
       }
-      .phx-hamburger { display: none; }
+     .phx-hamburger { display: none; }
       @media (max-width: 880px) {
         .phx-nav { display: none; }
         .phx-hamburger { display: inline-flex; }
@@ -795,7 +795,20 @@ html, body {
     height: 34px; 
     flex-shrink: 0 !important; /* Кнопки больше никогда не сожмутся и не съедут */
   }
-  .phx-owner-btn { display: block; }
+  
+  /* ИСПРАВЛЕННЫЙ БЛОК ДЛЯ ЗАМОЧКА */
+  .phx-owner-btn { 
+    display: inline-flex !important; /* Меняем block на флекс, чтобы центрировать */
+    align-items: center !important;  /* Выравниваем по вертикали */
+    justify-content: center !important; /* Выравниваем по горизонтали */
+    width: 34px !important;  /* Задаем тот же размер, что и у .phx-icon-btn */
+    height: 34px !important; 
+  }
+
+  /* Если сам SVG внутри всё ещё кажется мелковатым, чуть прибавим ему масштаб */
+  .phx-owner-btn svg {
+    transform: scale(1.15) !important; /* Делает иконку внутри на 15% крупнее */
+  }
 }
 
 
